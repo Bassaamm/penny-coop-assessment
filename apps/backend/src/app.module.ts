@@ -1,0 +1,44 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ApiConfigService } from './shared/services/api-config.service';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './modules/auth/infrastructure/guards/jwt-auth.guard';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/penny-coop'
+    ),
+    RedisModule.forRootAsync({
+      useFactory: () => ({
+        type: 'single',
+        options: {
+          host: process.env.REDIS_HOST || 'localhost',
+          port: parseInt(process.env.REDIS_PORT || '6379'),
+        },
+      }),
+    }),
+    AuthModule,
+    UsersModule,
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
+    ApiConfigService,
+  ],
+})
+export class AppModule {}
