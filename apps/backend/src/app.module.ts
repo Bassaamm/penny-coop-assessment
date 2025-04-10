@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './modules/auth/infrastructure/guards/jwt-auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -16,9 +17,12 @@ import { UsersModule } from './modules/users/users.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/penny-coop'
-    ),
+    MongooseModule.forRoot(process.env.MONGODB_PROD, {
+      auth: {
+        username: process.env.MONGODB_USERNAME,
+        password: process.env.MONGODB_PASSWORD,
+      },
+    }),
     RedisModule.forRootAsync({
       useFactory: () => ({
         type: 'single',
@@ -30,6 +34,7 @@ import { UsersModule } from './modules/users/users.module';
     }),
     AuthModule,
     UsersModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,16 +1,18 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-100">
   <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
     <h2 class="text-center mb-6 text-gray-800">Login</h2>
-
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="mb-5">
-        <label for="email" class="block mb-1.5 font-medium">Email</label>
+      <div class="mb-4">
+        <label for="email" class="block text-base font-medium text-gray-700">
+          Email address
+        </label>
         <input
           type="email"
           id="email"
           formControlName="email"
-          placeholder="Enter your email"
-          class="w-full p-2.5 border border-gray-300 rounded text-base focus:outline-none focus:border-blue-500"
+          required
+          placeholder="you@example.com"
+          class="bg-slate-200 rounded-2xl w-full my-1 p-3 shadow-md border-none"
         />
         <div
           *ngIf="
@@ -18,18 +20,20 @@
           "
           class="text-red-500 text-sm mt-1"
         >
-          Please enter a valid email address.
+          Please enter a valid email.
         </div>
       </div>
-
-      <div class="mb-5">
-        <label for="password" class="block mb-1.5 font-medium">Password</label>
+      <div class="mb-6">
+        <label for="password" class="block text-base font-medium text-gray-700">
+          Password
+        </label>
         <input
           type="password"
           id="password"
           formControlName="password"
-          placeholder="Enter your password"
-          class="w-full p-2.5 border border-gray-300 rounded text-base focus:outline-none focus:border-blue-500"
+          required
+          placeholder="••••••••"
+          class="bg-slate-200 rounded-2xl w-full my-1 p-3 shadow-md border-none"
         />
         <div
           *ngIf="
@@ -41,27 +45,30 @@
           Password must be at least 6 characters.
         </div>
       </div>
-
       <div class="flex justify-between items-center mb-5">
-        <a
-          routerLink="/forgot-password"
-          class="text-blue-500 no-underline hover:underline"
-          >Forgot Password?</a
-        >
         <button
           type="submit"
-          [disabled]="loginForm.invalid"
-          class="bg-blue-500 text-white border-none rounded py-2.5 px-5 text-base cursor-pointer hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          [disabled]="loginForm.invalid || (loading$ | async)"
+          class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          Login
+          <span *ngIf="(loading$ | async) === false">Login</span>
+          <span *ngIf="loading$ | async">Loading...</span>
         </button>
       </div>
-
-      <div *ngIf="errorMessage" class="text-red-500 text-sm mt-1">
+      <div
+        *ngIf="error$ | async as errorMessage"
+        class="text-red-500 text-sm mt-1"
+      >
         {{ errorMessage }}
       </div>
     </form>
-
+    <div class="text-center mt-5 text-sm">
+      <a
+        routerLink="/forgot-password"
+        class="text-blue-500 no-underline hover:underline"
+        >Forgot Password?</a
+      >
+    </div>
     <div class="text-center mt-5 text-sm">
       Don't have an account?
       <a routerLink="/signup" class="text-blue-500 no-underline hover:underline"

@@ -64,7 +64,7 @@ export class AuthService {
       });
       return decoded;
     } catch (error) {
-      this.logger.error(`Error: ${error.message}`);
+      this.logger.error(`Error: ${error.error.message[0]}`);
       throw new UnauthorizedException('Invalid access token');
     }
   }

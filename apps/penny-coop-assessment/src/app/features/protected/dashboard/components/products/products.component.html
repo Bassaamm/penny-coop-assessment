@@ -1,5 +1,13 @@
 <div class="w-full">
-  <h2 class="text-2xl font-semibold mb-5">Products Management</h2>
+  <div class="flex justify-between items-center mb-5">
+    <h2 class="text-2xl font-semibold">Products Management</h2>
+    <button
+      (click)="openCreateDialog()"
+      class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white flex items-center rounded-lg"
+    >
+      Add Product
+    </button>
+  </div>
 
   <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <table class="w-full border-collapse">
@@ -29,19 +37,15 @@
       </thead>
       <tbody>
         <tr *ngFor="let product of products">
-          <td class="p-3 border-b border-gray-200">{{ product.id }}</td>
+          <td class="p-3 border-b border-gray-200">{{ product._id }}</td>
           <td class="p-3 border-b border-gray-200">{{ product.name }}</td>
           <td class="p-3 border-b border-gray-200">
             ${{ product.price.toFixed(2) }}
           </td>
           <td class="p-3 border-b border-gray-200">
             <button
-              class="px-3 py-1.5 bg-blue-500 text-white border-none rounded cursor-pointer mr-1.5 hover:bg-blue-600"
-            >
-              Edit
-            </button>
-            <button
-              class="px-3 py-1.5 bg-red-500 text-white border-none rounded cursor-pointer hover:bg-red-600"
+              (click)="deleteProduct(product._id)"
+              class="px-3 py-1.5 bg-red-500 text-white border-none rounded-lg cursor-pointer hover:bg-red-600"
             >
               Delete
             </button>

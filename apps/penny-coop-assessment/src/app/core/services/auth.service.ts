@@ -1,36 +1,105 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import {
+  Session,
+  getSession,
+  setSession,
+  deleteSession,
+} from '../utils/session-utils';
+import { map, tap } from 'rxjs/operators';
+import { User } from '../types/User';
 
-@Injectable({
-  providedIn: 'root',
-})
+export interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'auth_token';
+  private session: Session | null = getSession();
+  private readonly API_URL = 'http://localhost:3000/api';
 
-  login(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
-    // You could also set a cookie here if preferred
-    // document.cookie = `${this.TOKEN_KEY}=${token}; path=/; max-age=86400`;
-  }
+  constructor(private http: HttpClient) {}
 
-  logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    // If using cookies, also clear them
-    // document.cookie = `${this.TOKEN_KEY}=; path=/; max-age=0`;
+  getAccessToken(): string | null {
+    return this.session?.access_token || null;
   }
 
   isAuthenticated(): boolean {
-    // Check localStorage for token
-    const token = localStorage.getItem(this.TOKEN_KEY);
-
-    // Alternatively, check cookies
-    // const cookies = document.cookie.split(';');
-    // const tokenCookie = cookies.find(cookie => cookie.trim().startsWith(`${this.TOKEN_KEY}=`));
-    // const token = tokenCookie ? tokenCookie.split('=')[1] : null;
-
-    return !!token;
+    this.session = getSession();
+    return !!this.session?.access_token;
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+  login(email: string, password: string): Observable<Session> {
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/auth/login`, { email, password })
+      .pipe(
+        tap((response) => {
+          this.session = {
+            access_token: response.access_token,
+            refresh_token: response.refresh_token,
+          };
+          setSession(this.session);
+        })
+      );
+  }
+
+  signUp(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/auth/signup`, {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+  }
+
+  getProfile(): Observable<User> {
+    this.session = getSession();
+    if (!this.session?.access_token) {
+      return throwError(() => new Error('No access token found'));
+    }
+
+    return this.http.get<User>(`${this.API_URL}/auth/profile`);
+  }
+  refreshToken(): Observable<string> {
+    if (!this.session?.refresh_token) {
+      deleteSession();
+      return new Observable((observer) => observer.complete());
+    }
+
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/auth/refresh-token`, {
+        refresh_token: this.session.refresh_token,
+      })
+      .pipe(
+        tap((res) => {
+          this.session = {
+            access_token: res.access_token,
+            refresh_token: res.refresh_token,
+          };
+          setSession(this.session);
+        }),
+        map((res) => res.access_token)
+      );
+  }
+
+  logout(): void {
+    this.session = null;
+    deleteSession();
+  }
+  requestPasswordReset(email: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/auth/reset-password`, { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/auth/reset-password/${token}`, {
+      password,
+    });
   }
 }

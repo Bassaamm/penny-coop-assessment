@@ -1,1 +1,52 @@
-<p>landing-page works!</p>
+<div class="flex flex-col min-h-screen">
+  <app-header></app-header>
+
+  <main
+    class="flex-grow flex flex-col justify-center items-center text-center px-4"
+  >
+    <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+      Welcome to the assessment
+    </h1>
+    <p class="text-lg md:text-2xl text-gray-600 mb-8">
+      This is the Landing page for the assessment
+    </p>
+    <div class="space-x-4">
+      <ng-container *ngIf="(isLoggedIn | async) === false; else loggedContent">
+        <button
+          (click)="login()"
+          class="bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Log In
+        </button>
+        <button
+          (click)="signUp()"
+          class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg hover:bg-green-600 text-white font-semibold py-2 px-4"
+        >
+          Sign Up
+        </button>
+      </ng-container>
+      <ng-template #loggedContent>
+        <ng-container *ngIf="userProfile | async as userProfile">
+          <span
+            class="text-xl bg-slate-900 text-white hover:cursor-default py-2 px-4 rounded-lg font-semibold"
+            >Hello, {{ userProfile.firstName }}!</span
+          >
+          <button
+            (click)="viewDashboard()"
+            class="bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-white font-semibold py-2 px-4 rounded-lg"
+          >
+            View Dashboard
+          </button>
+          <button
+            (click)="logout()"
+            class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
+          >
+            Logout
+          </button>
+        </ng-container>
+      </ng-template>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>

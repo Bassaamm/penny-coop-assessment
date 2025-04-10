@@ -1,6 +1,6 @@
 import { UserPayload } from './../../../auth/infrastructure/strategy/jwt.strategy';
 import { ReqUser } from './../../../../common/decorators/request-user.decorator';
-import { Body, Controller, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { UserService } from '../../core/services/user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateUserDto } from '../views/update-user.dto';
@@ -10,6 +10,10 @@ import { UpdateUserDto } from '../views/update-user.dto';
 export class UsersController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('all')
+  async getAllUsers() {
+    return this.userService.getAllUsers();
+  }
   @Patch('profile')
   async updateProfile(
     @ReqUser() { user }: UserPayload,

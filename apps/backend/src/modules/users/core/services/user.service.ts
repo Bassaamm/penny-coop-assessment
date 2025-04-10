@@ -20,13 +20,9 @@ export class UserService extends AbstractService<User> {
     super(userModel as Model<User>);
   }
 
-  // async findOneUserOrFail(id: string): Promise<User> {
-  //   const user = await this.userModel.findById(id).exec();
-  //   if (!user) {
-  //     throw new Error(`User with id ${id} not found`);
-  //   }
-  //   return user;
-  // }
+  async getAllUsers(): Promise<User[]> {
+    return await this.findAll();
+  }
 
   async generateHash(password: string): Promise<string> {
     const pepper = process.env.PASSWORD_PEPPER || '';

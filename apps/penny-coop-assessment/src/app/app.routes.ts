@@ -4,6 +4,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 import { authGuardFn } from './core/guards/auth.guard';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -30,6 +31,10 @@ export const appRoutes: Route[] = [
   {
     path: 'forgot-password',
     component: ForgetPasswordComponent,
+  },
+  {
+    path: 'reset-password/:token',
+    component: ResetPasswordComponent,
   },
   { path: '**', redirectTo: 'landing' },
 ];

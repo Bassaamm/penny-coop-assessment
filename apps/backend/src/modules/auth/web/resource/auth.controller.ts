@@ -17,7 +17,6 @@ import { RefreshTokenDto } from '../views/refresh-token.dto';
 import { RegisterUserDto } from '../views/register-user.dto';
 import { SignInDto } from '../views/signin-user.dto';
 import { Public } from '../../infrastructure/decorators/public.decorator';
-import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import AuthResponsePresenter from '../views/auth-response.presenter';
 import RefreshTokenResponsePresenter from '../views/refresh-token-response.presenter';
@@ -63,7 +62,7 @@ export class AuthController implements OnApplicationBootstrap {
 
   @Public()
   @ApiOkResponse({ type: AuthResponsePresenter })
-  @Post('signin')
+  @Post('login')
   async signIn(@Body() signInDto: SignInDto) {
     const session = await this.authService.signIn(signInDto);
     return session;
