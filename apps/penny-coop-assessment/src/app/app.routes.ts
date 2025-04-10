@@ -3,6 +3,7 @@ import { LandingPageComponent } from './features/landing-page/landing-page.compo
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
+import { authGuardFn } from './core/guards/auth.guard';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -11,8 +12,12 @@ export const appRoutes: Route[] = [
     component: LandingPageComponent,
   },
   {
-    path: 'dashbaord',
-    component: LandingPageComponent,
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./features/protected/dashboard/dashboard-routing.module').then(
+        (m) => m.DashboardRoutingModule
+      ),
+    canActivate: [authGuardFn],
   },
   {
     path: 'login',

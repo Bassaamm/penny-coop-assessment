@@ -15,14 +15,13 @@
         "main": "apps/penny-coop-assessment/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/penny-coop-assessment/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
             "input": "apps/penny-coop-assessment/public"
           }
         ],
-        "styles": ["apps/penny-coop-assessment/src/styles.scss"],
+        "styles": ["apps/penny-coop-assessment/src/styles.css"],
         "scripts": []
       },
       "configurations": {

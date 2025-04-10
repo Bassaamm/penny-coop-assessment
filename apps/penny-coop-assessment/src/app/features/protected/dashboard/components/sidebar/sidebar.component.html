@@ -1,0 +1,39 @@
+<div class="w-64 bg-gray-800 text-white flex flex-col h-full">
+  <div class="p-5 text-center border-b border-gray-700">
+    <h2 class="text-xl font-bold">Penny Coop</h2>
+  </div>
+
+  <nav class="flex-1">
+    <ul class="list-none p-0 m-0">
+      <li>
+        <a
+          routerLink="/dashboard/users"
+          routerLinkActive="bg-gray-700"
+          class="flex items-center px-5 py-4 text-white no-underline transition-colors hover:bg-gray-700"
+        >
+          <span class="mr-3">👥</span>
+          <span>Users</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/dashboard/products"
+          routerLinkActive="bg-gray-700"
+          class="flex items-center px-5 py-4 text-white no-underline transition-colors hover:bg-gray-700"
+        >
+          <span class="mr-3">📦</span>
+          <span>Products</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="p-5 border-t border-gray-700">
+    <button
+      (click)="logout()"
+      class="w-full py-2.5 bg-red-600 text-white border-none rounded cursor-pointer hover:bg-red-700"
+    >
+      Logout
+    </button>
+  </div>
+</div>
