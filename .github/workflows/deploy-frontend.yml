@@ -1,4 +1,4 @@
-name: Deploy Angular Frontend to Cloud Run
+name: Deploy Frontend to Cloud Run
 
 on:
   push:
@@ -13,24 +13,26 @@ env:
 
 jobs:
   deploy:
+    name: Build and Deploy Angular Frontend
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Auth with GCP
+      - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Setup gcloud
+      - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Configure Docker to push
-        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-      - name: Install deps & build Angular
+      - name: Install deps & build Angular app
         run: |
           npm install
           npx nx build penny-coop-assessment --configuration=production
@@ -50,4 +52,5 @@ jobs:
             --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }} \
             --platform managed \
             --region ${{ env.REGION }} \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --port 8080

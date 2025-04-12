@@ -11,7 +11,8 @@ RUN npx nx build penny-coop-assessment --configuration=production
 FROM nginx:alpine
 
 COPY --from=builder /app/dist/apps/penny-coop-assessment /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
