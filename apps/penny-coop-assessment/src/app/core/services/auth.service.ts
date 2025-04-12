@@ -9,6 +9,7 @@ import {
 } from '../utils/session-utils';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../types/User';
+import { environment } from '../../../environments/environments';
 
 export interface AuthResponse {
   access_token: string;
@@ -18,7 +19,7 @@ export interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private session: Session | null = getSession();
-  private readonly API_URL = 'http://localhost:3000/api';
+  private readonly API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
