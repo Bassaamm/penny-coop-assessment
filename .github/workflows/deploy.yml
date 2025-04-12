@@ -54,16 +54,4 @@ jobs:
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
             --port 3000 \
-            --set-env-vars PORT=3000,\
-            JWT_SECRET=${{ secrets.JWT_SECRET }},\
-            JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }},\
-            JWT_REFRESH_TOKEN_EXPIRATION_TIME=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION_TIME }},\
-            FRONTEND_URL=${{ secrets.FRONTEND_URL }},\
-            REDIS_HOST=${{ secrets.REDIS_HOST }},\
-            REDIS_PORT=${{ secrets.REDIS_PORT }},\
-            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }},\
-            REDIS_USERNAME=${{ secrets.REDIS_USERNAME }},\
-            REDIS_TLS=${{ secrets.REDIS_TLS }},\
-            MONGODB_URI=${{ secrets.MONGODB_URI }},\
-            MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }},\
-            MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}
+            --set-env-vars="PORT=3000,JWT_SECRET=${{ secrets.JWT_SECRET }},JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }},JWT_REFRESH_TOKEN_EXPIRATION_TIME=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION_TIME }},FRONTEND_URL=${{ secrets.FRONTEND_URL }},REDIS_HOST=${{ secrets.REDIS_HOST }},REDIS_PORT=${{ secrets.REDIS_PORT }},REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }},REDIS_USERNAME=${{ secrets.REDIS_USERNAME }},REDIS_TLS=${{ secrets.REDIS_TLS }},MONGODB_URI=${{ secrets.MONGODB_URI }},MONGODB_USERNAME=${{ secrets.MONGODB_USERNAME }},MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}"
