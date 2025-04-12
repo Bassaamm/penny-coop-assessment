@@ -1,16 +1,14 @@
-FROM node:20-alpine
+FROM node:18-alpine
 
-WORKDIR /repo
+WORKDIR /app
 
-COPY package*.json ./
+# ✅ Use correct path to built package.json
+COPY apps/dist/backend/package.json ./package.json
 
-RUN npm install --legacy-peer-deps
+RUN npm install --omit=dev
 
-COPY . .
-
-RUN npx nx build backend
+COPY apps/dist/backend ./
 
 EXPOSE 3000
 
-# Run the built file. Adjust the path if your NX output is elsewhere.
-CMD ["node", "apps/dist/main.js"]
+CMD ["node", "main.js"]

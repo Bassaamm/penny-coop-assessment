@@ -10,6 +10,7 @@ import { JwtGuard } from './modules/auth/infrastructure/guards/jwt-auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -17,20 +18,11 @@ import { ProductsModule } from './modules/products/products.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGODB_PROD, {
-      auth: {
-        username: process.env.MONGODB_USERNAME,
-        password: process.env.MONGODB_PASSWORD,
-      },
-    }),
-    RedisModule.forRootAsync({
-      useFactory: () => ({
-        type: 'single',
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      }),
+    MongooseModule.forRootAsync({
+      imports: [SharedModule],
+      inject: [ApiConfigService],
+      useFactory: (configService: ApiConfigService) =>
+        configService.monogodbConfig,
     }),
     AuthModule,
     UsersModule,

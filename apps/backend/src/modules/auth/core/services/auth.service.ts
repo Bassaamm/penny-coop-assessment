@@ -1,10 +1,5 @@
 import { ApiConfigService } from './../../../../shared/services/api-config.service';
-import {
-  Injectable,
-  Logger,
-  UnauthorizedException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { SignInDto } from '../../web/views/signin-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenIdsStorage } from '../../infrastructure/strategy/refresh-token-ids-storage';
@@ -27,7 +22,6 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<AuthResponsePresenter> {
     const { email, password } = signInDto;
     const user = await this.validateUser(email, password);
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException('Invalid username or password');
     }
@@ -50,7 +44,6 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findOneByEmail(email, true);
-    console.log('userEmail', user);
     if (user && user.password && (await user.validatePassword(password))) {
       return user;
     }

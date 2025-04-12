@@ -1,4 +1,32 @@
 services:
+  backend:
+    build:
+      context: ../..
+      dockerfile: apps/backend/Dockerfile
+    container_name: penny-coop-backend
+    environment:
+      PORT: 3000
+      FRONTEND_URL: http://localhost:4200
+      JWT_SECRET: your-secret-key
+      JWT_EXPIRATION_TIME: 30m
+      JWT_REFRESH_TOKEN_EXPIRATION_TIME: 8h
+
+      MONGODB_URI: mongodb://mongodb:27017/penny-coop
+      MONGODB_USERNAME:
+      MONGODB_PASSWORD:
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD:
+      REDIS_USERNAME:
+      REDIS_TLS: false
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb
+      - redis
+    restart: always
+
   mongodb:
     image: mongo:latest
     container_name: penny-coop-mongodb

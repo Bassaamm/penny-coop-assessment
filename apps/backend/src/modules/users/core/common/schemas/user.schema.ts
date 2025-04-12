@@ -39,7 +39,9 @@ export class User extends Document {
     return bcrypt.compare(password, this.password);
   }
 }
+
 export const UserSchema = SchemaFactory.createForClass(User);
+
 UserSchema.methods.validatePassword = async function (
   password: string
 ): Promise<boolean> {

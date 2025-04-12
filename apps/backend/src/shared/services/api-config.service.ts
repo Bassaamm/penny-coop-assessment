@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 import { RedisOptions } from 'ioredis';
 
 @Injectable()
@@ -41,6 +42,16 @@ export class ApiConfigService {
       secret: this.get('JWT_SECRET') || 'secretKey',
       signOptions: { expiresIn: this.get('JWT_EXPIRATION_TIME') || '1h' },
     };
+  }
+
+  get monogodbConfig(): MongooseModuleFactoryOptions {
+    return {
+      uri: this.get('MONGODB_URI'),
+      auth: {
+        username: this.get('MONGODB_USERNAME'),
+        password: this.get('MONGODB_PASSWORD'),
+      },
+    } as MongooseModuleFactoryOptions;
   }
 
   get redisConfig(): RedisOptions {

@@ -14,12 +14,13 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
-  // if (process.env.NODE_ENV === 'development') SwaggerSetup(app, 1010);
+
+  if (process.env.NODE_ENV === 'development') SwaggerSetup(app, port);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -31,5 +32,4 @@ async function bootstrap() {
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
 }
-
 bootstrap();

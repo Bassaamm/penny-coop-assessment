@@ -56,7 +56,6 @@ export class AuthController implements OnApplicationBootstrap {
   @Post('signup')
   async signUp(@Body() registerUserDto: RegisterUserDto) {
     const createdUser = await this.userService.createUser(registerUserDto);
-    console.log('asdas', createdUser);
     return createdUser;
   }
 

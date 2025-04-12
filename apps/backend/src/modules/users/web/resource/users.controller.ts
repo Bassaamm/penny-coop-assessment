@@ -14,6 +14,7 @@ export class UsersController {
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
+
   @Patch('profile')
   async updateProfile(
     @ReqUser() { user }: UserPayload,
