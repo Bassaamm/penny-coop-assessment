@@ -5,6 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { Store, StoreModule } from '@ngrx/store';
 import * as AuthActions from './store/auth/auth.actions';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   imports: [
@@ -23,9 +24,11 @@ import * as AuthActions from './store/auth/auth.actions';
 export class AppComponent implements OnInit {
   title = 'penny-coop-assessment';
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private authService: AuthService) {}
 
   ngOnInit() {
-    this.store.dispatch(AuthActions.checkAuthStatus());
+    if (this.authService.isAuthenticated()) {
+      this.store.dispatch(AuthActions.checkAuthStatus());
+    }
   }
 }

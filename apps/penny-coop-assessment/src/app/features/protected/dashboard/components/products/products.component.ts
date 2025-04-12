@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SnackbarService } from '../../../../../shared/components/snackbar/snackbar.service';
-import { ProductService } from './product.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { Product } from '../../../../../core/types/Product';
+import {
+  ProductsActions,
+  ProductsSelectors,
+} from '../../../../../store/products';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateProductDialogComponent } from './components/create-product-dialog.component';
 
@@ -14,18 +18,29 @@ import { CreateProductDialogComponent } from './components/create-product-dialog
   styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent implements OnInit {
-  products: Product[] = [];
+  products$: Observable<Product[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
 
-  constructor(
-    private productService: ProductService,
-    private snackbar: SnackbarService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private store: Store, private dialog: MatDialog) {
+    this.products$ = this.store.select(ProductsSelectors.selectAllProducts);
+    this.loading$ = this.store.select(ProductsSelectors.selectProductsLoading);
+    this.error$ = this.store.select(ProductsSelectors.selectProductsError);
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadProducts();
   }
-  openCreateDialog() {
+
+  loadProducts(): void {
+    this.store.dispatch(ProductsActions.loadProducts());
+  }
+
+  deleteProduct(id: string): void {
+    this.store.dispatch(ProductsActions.deleteProduct({ id }));
+  }
+
+  openCreateDialog(): void {
     const dialogRef = this.dialog.open(CreateProductDialogComponent, {
       width: '500px',
     });
@@ -37,44 +52,7 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  loadProducts() {
-    this.productService.getProducts().subscribe({
-      next: (products) => {
-        this.products = products;
-      },
-      error: (error) => {
-        this.snackbar.error(
-          error.error.message[0] || 'Failed to load products'
-        );
-      },
-    });
-  }
-
-  createProduct(product: Partial<Product>) {
-    this.productService.createProduct(product).subscribe({
-      next: (createdProduct) => {
-        this.snackbar.success('Product created successfully');
-        this.products.push(createdProduct);
-      },
-      error: (error) => {
-        this.snackbar.error(
-          error.error.message[0] || 'Failed to create product'
-        );
-      },
-    });
-  }
-
-  deleteProduct(id: string) {
-    this.productService.deleteProduct(id).subscribe({
-      next: () => {
-        this.snackbar.success('Product deleted successfully');
-        this.loadProducts();
-      },
-      error: (error) => {
-        this.snackbar.error(
-          error.error.message[0] || 'Failed to delete product'
-        );
-      },
-    });
+  createProduct(product: Partial<Product>): void {
+    this.store.dispatch(ProductsActions.createProduct({ product }));
   }
 }

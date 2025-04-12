@@ -13,11 +13,12 @@ import { Observable } from 'rxjs';
 import * as AuthActions from '../../../store/auth/auth.actions';
 import * as AuthSelectors from '../../../store/auth/auth.selectors';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })

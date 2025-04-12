@@ -31,9 +31,11 @@ export const authReducer = createReducer(
   })),
   on(AuthActions.loginFailure, (state, { error }) => ({
     ...state,
+    isAuthenticated: false,
     loading: false,
     error,
   })),
+
   on(AuthActions.getProfile, (state) => ({
     ...state,
     loading: true,
@@ -42,6 +44,7 @@ export const authReducer = createReducer(
   on(AuthActions.getProfileSuccess, (state, { user }) => ({
     ...state,
     user,
+    isAuthenticated: true,
     loading: false,
     error: null,
   })),
@@ -50,6 +53,7 @@ export const authReducer = createReducer(
     loading: false,
     error,
   })),
+
   on(AuthActions.logout, (state) => ({
     ...state,
     loading: true,
@@ -57,13 +61,20 @@ export const authReducer = createReducer(
   on(AuthActions.logoutSuccess, () => ({
     ...initialState,
   })),
+
   on(AuthActions.checkAuthStatus, (state) => ({
     ...state,
     loading: true,
   })),
-  on(AuthActions.authStatusChecked, (state, { isAuthenticated }) => ({
+  on(AuthActions.authSuccess, (state) => ({
     ...state,
-    isAuthenticated,
+    isAuthenticated: true,
     loading: false,
+  })),
+  on(AuthActions.authFailure, (state, { error }) => ({
+    ...state,
+    isAuthenticated: false,
+    loading: false,
+    error,
   }))
 );

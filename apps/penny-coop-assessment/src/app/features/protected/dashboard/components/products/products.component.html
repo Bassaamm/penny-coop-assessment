@@ -9,7 +9,21 @@
     </button>
   </div>
 
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <div *ngIf="loading$ | async" class="text-center py-4">
+    Loading products...
+  </div>
+
+  <div
+    *ngIf="error$ | async as error"
+    class="bg-red-100 text-red-700 p-3 rounded mb-4"
+  >
+    {{ error }}
+  </div>
+
+  <div
+    *ngIf="products$ | async as products"
+    class="bg-white rounded-lg shadow-md overflow-hidden"
+  >
     <table class="w-full border-collapse">
       <thead>
         <tr>

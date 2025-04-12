@@ -14,12 +14,4 @@ export class UserService {
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.API_URL}/users/all`);
   }
-
-  updateUser(id: string, user: Partial<User>): Observable<User> {
-    return this.http.patch<User>(`${this.API_URL}/users/${id}`, user);
-  }
-
-  deleteUser(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/users/${id}`);
-  }
 }

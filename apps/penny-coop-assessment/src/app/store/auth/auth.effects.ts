@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap, concatMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
@@ -22,24 +22,36 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap(({ email, password }) =>
         this.authService.login(email, password).pipe(
-          map((response) => AuthActions.loginSuccess({ token: response })),
+          map((session) => AuthActions.loginSuccess({ session })),
           catchError((error) =>
-            of(
-              AuthActions.loginFailure({
-                error: error.message || 'Login failed',
-              })
-            )
+            of(AuthActions.loginFailure({ error: error.message }))
           )
         )
       )
     )
   );
 
-  loginSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.loginSuccess),
-      map(() => AuthActions.getProfile())
-    )
+  loginSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.loginSuccess),
+        tap(() => {
+          this.snackbar.success('Login successful!');
+          this.router.navigate(['/dashboard']);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  loginFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.loginFailure),
+        tap(({ error }) => {
+          this.snackbar.error(error || 'Login failed. Please try again.');
+        })
+      ),
+    { dispatch: false }
   );
 
   getProfile$ = createEffect(() =>
@@ -60,37 +72,15 @@ export class AuthEffects {
     )
   );
 
-  getProfileSuccess$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.getProfileSuccess),
-        tap(() => {
-          this.snackbar.success('Login successful!');
-          this.router.navigate(['/dashboard']);
-        })
-      ),
-    { dispatch: false }
-  );
-
-  loginFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.loginFailure),
-        tap(({ error }) => {
-          this.snackbar.error(error || 'Login failed. Please try again.');
-        })
-      ),
-    { dispatch: false }
-  );
-
   getProfileFailure$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.getProfileFailure),
         tap(({ error }) => {
           this.snackbar.error(error || 'Failed to load profile');
-          this.authService.logout();
-          this.router.navigate(['/login']);
+          if (this.router.url.includes('/dashboard')) {
+            this.router.navigate(['/landing']);
+          }
         })
       ),
     { dispatch: false }
@@ -122,15 +112,11 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.checkAuthStatus),
       switchMap(() => {
-        const isAuthenticated = this.authService.isAuthenticated();
-
-        if (isAuthenticated) {
-          return of(
-            AuthActions.authStatusChecked({ isAuthenticated: true })
-          ).pipe(concatMap((action) => [action, AuthActions.getProfile()]));
+        if (this.authService.isAuthenticated()) {
+          return of(AuthActions.getProfile());
+        } else {
+          return of(AuthActions.authFailure({ error: 'Not authenticated' }));
         }
-
-        return of(AuthActions.authStatusChecked({ isAuthenticated: false }));
       })
     )
   );

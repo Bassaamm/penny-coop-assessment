@@ -1,8 +1,9 @@
-import { SnackbarService } from './../../../../../shared/components/snackbar/snackbar.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from './user.service';
 import { User } from '../../../../../core/types/User';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { UsersActions, UsersSelectors } from '../../../../../store/users';
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -11,25 +12,21 @@ import { User } from '../../../../../core/types/User';
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
-  users: User[] = [];
+  users$: Observable<User[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
 
-  constructor(
-    private userService: UserService,
-    private snackbar: SnackbarService
-  ) {}
+  constructor(private store: Store) {
+    this.users$ = this.store.select(UsersSelectors.selectAllUsers);
+    this.loading$ = this.store.select(UsersSelectors.selectUsersLoading);
+    this.error$ = this.store.select(UsersSelectors.selectUsersError);
+  }
 
   ngOnInit() {
     this.loadUsers();
   }
 
-  loadUsers() {
-    this.userService.getUsers().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: (error) => {
-        this.snackbar.error(error.error.message[0] || 'Failed to load users');
-      },
-    });
+  loadUsers(): void {
+    this.store.dispatch(UsersActions.loadUsers());
   }
 }

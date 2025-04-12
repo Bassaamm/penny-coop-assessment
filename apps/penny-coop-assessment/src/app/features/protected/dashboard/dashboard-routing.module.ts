@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { authGuardFn } from '../../../core/guards/auth.guard';
 import { UsersComponent } from './components/users/users.component';
 import { ProductsComponent } from './components/products/products.component';
 
-const routes: Routes = [
+export const DASHBOARD_ROUTES: Routes = [
   {
     path: '',
     component: DashboardComponent,
@@ -17,9 +16,3 @@ const routes: Routes = [
     ],
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class DashboardRoutingModule {}
