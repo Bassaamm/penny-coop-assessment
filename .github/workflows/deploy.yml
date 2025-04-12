@@ -34,7 +34,7 @@ jobs:
 
       - name: Install monorepo deps and build backend
         run: |
-          npm install
+          npm install --ignore-scripts
           npx nx run backend:build
 
       - name: Build Docker image (runtime only)
