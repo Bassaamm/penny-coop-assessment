@@ -20,28 +20,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Authenticate Google Cloud
+      - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Set up GC CLI
+      - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Configure Docker to Artifact Registry
+      - name: Configure Docker to use Artifact Registry
         run: |
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-      - name: Build backend
+      - name: Install monorepo deps and build backend
         run: |
           npm install
           npx nx run backend:build
 
-      - name: Build Docker image
+      - name: Build Docker image (runtime only)
         run: |
-          docker build -f apps/backend/Dockerfile \ -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }} \ apps/
+          docker build -f apps/backend/Dockerfile \
+            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }} \
+            .
 
-      - name: Push image to Artifact Registry
+      - name: Push Docker image to Artifact Registry
         run: |
           docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }}
 

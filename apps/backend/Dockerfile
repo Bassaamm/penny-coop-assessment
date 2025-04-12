@@ -2,13 +2,10 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# ✅ Use correct path to built package.json
 COPY apps/dist/backend/package.json ./package.json
-
 RUN npm install --omit=dev
 
-COPY apps/dist/backend ./
+COPY apps/dist/backend ./dist
 
 EXPOSE 3000
-
-CMD ["node", "main.js"]
+CMD ["node", "dist/main.js"]
