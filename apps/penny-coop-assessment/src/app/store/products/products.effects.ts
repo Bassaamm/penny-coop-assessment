@@ -21,7 +21,7 @@ export class ProductsEffects {
           catchError((error) =>
             of(
               ProductsActions.loadProductsFailure({
-                error: error.message || 'Failed to load products',
+                error: 'Failed to load products',
               })
             )
           )
@@ -39,7 +39,7 @@ export class ProductsEffects {
           catchError((error) =>
             of(
               ProductsActions.deleteProductFailure({
-                error: error.message || 'Failed to delete product',
+                error: 'Failed to delete product',
               })
             )
           )
@@ -59,7 +59,7 @@ export class ProductsEffects {
           catchError((error) =>
             of(
               ProductsActions.createProductFailure({
-                error: error.message || 'Failed to create product',
+                error: 'Failed to create product',
               })
             )
           )

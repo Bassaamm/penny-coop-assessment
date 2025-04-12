@@ -48,7 +48,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.loginFailure),
         tap(({ error }) => {
-          this.snackbar.error(error || 'Login failed. Please try again.');
+          this.snackbar.error('Login failed, invalid email or password.');
         })
       ),
     { dispatch: false }
@@ -63,7 +63,7 @@ export class AuthEffects {
           catchError((error) =>
             of(
               AuthActions.getProfileFailure({
-                error: error.message || 'Failed to load profile',
+                error: 'Failed to load profile',
               })
             )
           )
@@ -77,7 +77,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.getProfileFailure),
         tap(({ error }) => {
-          this.snackbar.error(error || 'Failed to load profile');
+          this.snackbar.error('Failed to load profile');
           if (this.router.url.includes('/dashboard')) {
             this.router.navigate(['/landing']);
           }

@@ -7,10 +7,7 @@ import * as UsersActions from './users.actions';
 
 @Injectable()
 export class UsersEffects {
-  constructor(
-    private actions$: Actions,
-    private userService: UserService
-  ) {}
+  constructor(private actions$: Actions, private userService: UserService) {}
 
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
@@ -21,7 +18,7 @@ export class UsersEffects {
           catchError((error) =>
             of(
               UsersActions.loadUsersFailure({
-                error: error.message || 'Failed to load users',
+                error: 'Failed to load users',
               })
             )
           )

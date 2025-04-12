@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModuleFactoryOptions } from '@nestjs/mongoose';
-import { RedisOptions } from 'ioredis';
 
 @Injectable()
 export class ApiConfigService {
@@ -54,15 +53,7 @@ export class ApiConfigService {
     } as MongooseModuleFactoryOptions;
   }
 
-  get redisConfig(): RedisOptions {
-    return {
-      host: this.get('REDIS_HOST') || 'localhost',
-      port: this.getInt('REDIS_PORT') || 6379,
-      password: this.get('REDIS_PASSWORD'),
-      username: this.get('REDIS_USERNAME'),
-      tls: this.getBoolean('REDIS_TLS')
-        ? { rejectUnauthorized: false }
-        : undefined,
-    };
+  get redisConfig() {
+    return this.get('REDIS_URL');
   }
 }
