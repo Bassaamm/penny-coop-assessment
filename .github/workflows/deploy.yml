@@ -40,8 +40,7 @@ jobs:
       - name: Build Docker image (runtime only)
         run: |
           docker build -f apps/backend/Dockerfile \
-            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }} \
-            .
+            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }} .
 
       - name: Push Docker image to Artifact Registry
         run: |
@@ -54,9 +53,8 @@ jobs:
             --platform managed \
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
-            --port 3000
-            --set-env-vars \
-            JWT_SECRET=${{ secrets.JWT_SECRET }},\
+            --port 3000 \
+            --set-env-vars JWT_SECRET=${{ secrets.JWT_SECRET }},\
             JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }},\
             JWT_REFRESH_TOKEN_EXPIRATION_TIME=${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION_TIME }},\
             FRONTEND_URL=${{ secrets.FRONTEND_URL }},\
