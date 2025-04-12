@@ -32,8 +32,8 @@
 
 ## Live Demo
 
-- **Frontend**: [https://penny-coop-frontend-url](<[https://penny-coop-frontend-url](https://penny-coop-frontend-678553266708.europe-west1.run.app/landing)>)
-- **Backend**: [https://penny-coop-backend-url](<[https://penny-coop-backend-url](https://penny-coop-backend-678553266708.europe-west1.run.app)>)
+- **Frontend**: [https://penny-coop-frontend-url](https://penny-coop-frontend-678553266708.europe-west1.run.app/landing)
+- **Backend**: [https://penny-coop-backend-url](https://penny-coop-backend-678553266708.europe-west1.run.app)
 
 ---
 
