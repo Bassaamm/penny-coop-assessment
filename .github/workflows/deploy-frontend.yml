@@ -34,7 +34,7 @@ jobs:
 
       - name: Install deps & build Angular app
         run: |
-          npm install
+          npm install --ignore-scripts
           npx nx build penny-coop-assessment --configuration=production
 
       - name: Build Docker image
