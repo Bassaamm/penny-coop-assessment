@@ -28,7 +28,7 @@
         "production": {
           "fileReplacements": [
             {
-              "replace": "apps/penny-coop-assessment/src/environments/environment.ts",
+              "replace": "apps/penny-coop-assessment/src/environments/environment.dev.ts",
               "with": "apps/penny-coop-assessment/src/environments/environment.prod.ts"
             }
           ],

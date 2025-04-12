@@ -9,7 +9,7 @@ import {
 } from '../utils/session-utils';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../types/User';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../environments/environment.dev';
 
 export interface AuthResponse {
   access_token: string;
